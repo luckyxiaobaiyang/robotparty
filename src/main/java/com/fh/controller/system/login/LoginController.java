@@ -1,13 +1,19 @@
 package com.fh.controller.system.login;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.fh.controller.base.BaseController;
+import com.fh.entity.system.Menu;
+import com.fh.entity.system.Role;
+import com.fh.entity.system.User;
+import com.fh.service.fhoa.datajur.DatajurManager;
+import com.fh.service.system.appuser.AppuserManager;
+import com.fh.service.system.buttonrights.ButtonrightsManager;
+import com.fh.service.system.fhbutton.FhbuttonManager;
+import com.fh.service.system.fhlog.FHlogManager;
+import com.fh.service.system.loginimg.LogInImgManager;
+import com.fh.service.system.menu.MenuManager;
+import com.fh.service.system.role.RoleManager;
+import com.fh.service.system.user.UserManager;
+import com.fh.util.*;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,26 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fh.controller.base.BaseController;
-import com.fh.service.fhoa.datajur.DatajurManager;
-import com.fh.service.system.appuser.AppuserManager;
-import com.fh.service.system.buttonrights.ButtonrightsManager;
-import com.fh.service.system.fhbutton.FhbuttonManager;
-import com.fh.service.system.fhlog.FHlogManager;
-import com.fh.service.system.loginimg.LogInImgManager;
-import com.fh.service.system.menu.MenuManager;
-import com.fh.entity.system.Menu;
-import com.fh.entity.system.Role;
-import com.fh.entity.system.User;
-import com.fh.service.system.role.RoleManager;
-import com.fh.service.system.user.UserManager;
-import com.fh.util.AppUtil;
-import com.fh.util.Const;
-import com.fh.util.DateUtil;
-import com.fh.util.Jurisdiction;
-import com.fh.util.PageData;
-import com.fh.util.RightsHelper;
-import com.fh.util.Tools;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 /**
  * 总入口
  * @author fh QQ 3 1 3 5 9 6 7 9 0[青苔]
@@ -163,8 +155,7 @@ public class LoginController extends BaseController {
 	@RequestMapping(value="/main/{changeMenu}")
 	public ModelAndView login_index(@PathVariable("changeMenu") String changeMenu){
 		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
+		PageData pd = this.getPageData();
 		try{
 			Session session = Jurisdiction.getSession();
 			User user = (User)session.getAttribute(Const.SESSION_USER);						//读取session中的用户信息(单独用户信息)
@@ -182,10 +173,8 @@ public class LoginController extends BaseController {
 				session.setAttribute(USERNAME + Const.SESSION_ROLE_RIGHTS, roleRights); 	//将角色权限存入session
 				session.setAttribute(Const.SESSION_USERNAME, USERNAME);						//放入用户名到session
 				this.setAttributeToAllDEPARTMENT_ID(session, USERNAME);						//把用户的组织机构权限放到session里面
-				List<Menu> allmenuList = new ArrayList<Menu>();
-				allmenuList = this.getAttributeMenu(session, USERNAME, roleRights);			//菜单缓存
-				List<Menu> menuList = new ArrayList<Menu>();
-				menuList = this.changeMenuF(allmenuList, session, USERNAME, changeMenu);	//切换菜单
+				List<Menu> allmenuList = this.getAttributeMenu(session, USERNAME, roleRights);			//菜单缓存
+				List<Menu> menuList = this.changeMenuF(allmenuList, session, USERNAME, changeMenu);	//切换菜单
 				if(null == session.getAttribute(USERNAME + Const.SESSION_QX)){
 					session.setAttribute(USERNAME + Const.SESSION_QX, this.getUQX(USERNAME));//按钮权限放到session中
 				}
@@ -318,6 +307,7 @@ public class LoginController extends BaseController {
 		PageData pd = new PageData();
 		pd.put("userCount", Integer.parseInt(userService.getUserCount("").get("userCount").toString())-1);				//系统用户数
 		pd.put("appUserCount", Integer.parseInt(appuserService.getAppUserCount("").get("appUserCount").toString()));	//会员数
+		pd.put("SYSNAME", Tools.readTxtFile(Const.SYSNAME));
 		mv.addObject("pd",pd);
 		mv.setViewName("system/index/default");
 		return mv;
@@ -325,7 +315,7 @@ public class LoginController extends BaseController {
 	
 	/**
 	 * 用户注销
-	 * @param session
+	 * @param
 	 * @return
 	 * @throws Exception 
 	 */
@@ -390,7 +380,7 @@ public class LoginController extends BaseController {
 	}
 	
 	/**获取用户权限
-	 * @param session
+	 * @param
 	 * @return
 	 */
 	public Map<String, String> getUQX(String USERNAME){
