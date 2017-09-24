@@ -272,6 +272,8 @@
                             changeCode1();
                             $("#codeImg").bind("click", changeCode1);
 						}else if("codeerror" == data.result){
+                            changeCode1();
+                            $("#codeImg").bind("click", changeCode1);
 							$("#code").tips({
 								side : 1,
 								msg : "验证码输入有误",
@@ -280,8 +282,6 @@
 							});
 							showfh();
 							$("#code").focus();
-                            changeCode1();
-                            $("#codeImg").bind("click", changeCode1);
 						}else{
 							$("#loginname").tips({
 								side : 1,
