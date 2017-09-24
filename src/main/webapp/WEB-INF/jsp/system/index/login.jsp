@@ -73,7 +73,7 @@
 
 	<c:if test="${pd.isMusic == 'yes' }">
 	<div style="display: none">
-	    <audio src="static/login/music/fh3.mp3" autoplay=""></audio>
+	    <audio src="static/login/music/fh1.mp3" autoplay=""></audio>
 	</div>	
 	</c:if>
 	<canvas class="cavs"></canvas>
