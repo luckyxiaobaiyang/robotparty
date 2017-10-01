@@ -1,37 +1,13 @@
 package com.fh.util;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
+import java.net.Socket;
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.*;
 
 /** 
  * 说明：用于备份、还原数据库、在线编辑SQL
@@ -222,7 +198,6 @@ public class DbFH{
 		public DbBackUpCallable(String tableName){
 			this.tableName = tableName;
 		}
-		@Override
 		public Object call() {
 			try {
 				String remoteDB = pros.getProperty("remoteDB");			//是否远程备份数据库 yes or no
@@ -297,7 +272,7 @@ public class DbFH{
 	
 	/**数据库备份命令字符串
 	 * @param dbtype 数据库类型
-	 * @param dbpaths 数据库的路径
+	 * @param dbpath 数据库的路径
 	 * @param address 数据库连接地址
 	 * @param username 用户名
 	 * @param password 密码
@@ -353,7 +328,6 @@ public class DbFH{
 			this.tableName = tableName;
 			this.sqlFilePath = sqlFilePath;
 		}
-		@Override
 		public Object call() {
 			try {
 				String remoteDB = pros.getProperty("remoteDB");			//是否远程还原数据库 yes or no
